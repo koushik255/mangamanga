@@ -1,0 +1,19 @@
+[project]
+name = "manga-uploader"
+version = "0.1.0"
+description = "Upload manga volumes to R2 and Convex"
+requires-python = ">=3.10"
+dependencies = [
+    "pillow>=10.0",
+    "boto3>=1.34",
+    "python-dotenv>=1.0",
+    "rich>=13.0",
+    "typer>=0.9",
+    "convex>=0.7.0",
+]
+
+[project.scripts]
+upload-volume = "upload_volume:main"
+
+[tool.uv]
+dev-dependencies = []

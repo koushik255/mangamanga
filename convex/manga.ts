@@ -200,6 +200,41 @@ export const getMangaBySlug = query({
 });
 
 /**
+ * List all manga with their volume counts
+ */
+export const listMangaWithVolumeCounts = query({
+  args: {},
+  returns: v.array(
+    v.object({
+      _id: v.id("manga"),
+      title: v.string(),
+      slug: v.string(),
+      volumeCount: v.number(),
+    })
+  ),
+  handler: async (ctx) => {
+    const mangaList = await ctx.db.query("manga").collect();
+    
+    const result = [];
+    for (const manga of mangaList) {
+      const volumes = await ctx.db
+        .query("volumes")
+        .withIndex("by_manga", (q) => q.eq("mangaId", manga._id))
+        .collect();
+      
+      result.push({
+        _id: manga._id,
+        title: manga.title,
+        slug: manga.slug,
+        volumeCount: volumes.length,
+      });
+    }
+    
+    return result;
+  },
+});
+
+/**
  * Get specific volume with page URLs
  */
 export const getVolume = query({
