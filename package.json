@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.978.0",
+    "@elysiajs/cors": "^1.4.1",
     "@types/react": "^19.2.10",
     "@types/react-dom": "^19.2.3",
     "convex": "^1.31.7",
