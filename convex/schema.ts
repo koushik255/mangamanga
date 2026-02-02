@@ -23,4 +23,15 @@ export default defineSchema({
   })
   .index("by_manga", ["mangaId"])
   .index("by_manga_and_number", ["mangaId", "volumeNumber"]),
+  
+  readingProgress: defineTable({
+    userId: v.id("users"),
+    mangaId: v.id("manga"),
+    volumeNumber: v.number(),
+    pageNumber: v.number(),
+    pageUrl: v.string(),
+    lastReadAt: v.number(),
+  })
+  .index("by_user", ["userId"])
+  .index("by_user_manga", ["userId", "mangaId"]),
 });

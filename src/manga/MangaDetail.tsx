@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useQuery } from "convex/react";
+import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api.js";
 
 interface MangaDetailProps {
@@ -61,7 +61,7 @@ export function MangaDetail({ slug, onBack }: MangaDetailProps) {
         </select>
       </div>
 
-      <MangaReader slug={slug} volumeNumber={selectedVolume} />
+      <MangaReader slug={slug} volumeNumber={selectedVolume} mangaId={manga._id} />
     </div>
   );
 }
@@ -69,12 +69,14 @@ export function MangaDetail({ slug, onBack }: MangaDetailProps) {
 interface MangaReaderProps {
   slug: string;
   volumeNumber: number;
+  mangaId: string;
 }
 
-function MangaReader({ slug, volumeNumber }: MangaReaderProps) {
+function MangaReader({ slug, volumeNumber, mangaId }: MangaReaderProps) {
   const volumeData = useQuery(api.manga.getVolume, { mangaSlug: slug, volumeNumber });
   const [currentPage, setCurrentPage] = useState(0);
   const preloadedRef = useRef<Set<number>>(new Set());
+  const saveProgress = useMutation(api.readingProgress.saveProgress);
 
   // Reset page when volume changes
   useEffect(() => {
@@ -180,6 +182,41 @@ function MangaReader({ slug, volumeNumber }: MangaReaderProps) {
 
       <div style={{ marginTop: "20px", fontSize: "12px", color: "#999" }}>
         Tip: Use arrow keys (← →) or spacebar to navigate
+      </div>
+
+      {/* Bookmark Button */}
+      <div style={{ marginTop: "30px", textAlign: "center" }}>
+        <button
+          onClick={async () => {
+            try {
+              await saveProgress({
+                mangaId: mangaId as any,
+                volumeNumber,
+                pageNumber: currentPage + 1,
+                pageUrl: pages[currentPage]!,
+              });
+              alert("✅ Bookmark saved!");
+            } catch (e) {
+              alert("❌ Please sign in to save bookmarks");
+            }
+          }}
+          style={{
+            padding: "12px 24px",
+            backgroundColor: "#4CAF50",
+            color: "white",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+            fontSize: "16px",
+            fontWeight: "bold",
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            margin: "0 auto",
+          }}
+        >
+          🔖 Bookmark
+        </button>
       </div>
     </div>
   );
