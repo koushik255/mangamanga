@@ -4,7 +4,7 @@ import { cors } from '@elysiajs/cors'
 const app = new Elysia()
   // Enable CORS for cross-origin requests from Cloudflare Pages
   .use(cors({
-    origin: ['https://koushikkoushik.com', 'http://localhost:5173', 'http://localhost:3000'],
+    origin: ['https://koushikkoushik.com', 'https://www.koushikkoushik.com', 'http://localhost:5173', 'http://localhost:3000'],
     credentials: true,
     methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
