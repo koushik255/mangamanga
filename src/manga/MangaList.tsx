@@ -2,7 +2,7 @@ import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api.js";
 
 interface MangaListProps {
-  onSelectManga: (slug: string) => void;
+  onSelectManga: (slug: string, volume?: number, page?: number) => void;
 }
 
 export function MangaList({ onSelectManga }: MangaListProps) {
@@ -16,13 +16,15 @@ export function MangaList({ onSelectManga }: MangaListProps) {
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-        <h1 style={{ margin: 0 }}>Manga Library</h1>
-        
-        {lastRead && (
-          <a href="#" onClick={(e) => { e.preventDefault(); onSelectManga(lastRead.mangaSlug); }}>
-            Continue: {lastRead.mangaTitle} - Vol {lastRead.volumeNumber} Page {lastRead.pageNumber}
-          </a>
-        )}
+        <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+          <h1 style={{ margin: 0 }}>Manga Library</h1>
+          
+          {lastRead && (
+            <a href="#" onClick={(e) => { e.preventDefault(); onSelectManga(lastRead.mangaSlug, lastRead.volumeNumber, lastRead.pageNumber); }}>
+              Continue: {lastRead.mangaTitle} - Vol {lastRead.volumeNumber} Page {lastRead.pageNumber}
+            </a>
+          )}
+        </div>
       </div>
       <ul style={{ listStyle: "none", padding: 0 }}>
         {mangaList.map((manga) => (

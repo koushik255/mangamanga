@@ -5,17 +5,28 @@ import { api } from "../../convex/_generated/api.js";
 interface MangaDetailProps {
   slug: string;
   onBack: () => void;
+  initialVolume?: number;
+  initialPage?: number;
 }
 
-export function MangaDetail({ slug, onBack }: MangaDetailProps) {
+export function MangaDetail({ slug, onBack, initialVolume, initialPage }: MangaDetailProps) {
   const mangaData = useQuery(api.manga.getMangaBySlug, { slug });
-  const [selectedVolume, setSelectedVolume] = useState<number>(1);
+  const [selectedVolume, setSelectedVolume] = useState<number>(initialVolume || 1);
 
   useEffect(() => {
     if (mangaData?.volumes && mangaData.volumes.length > 0) {
+      // If initialVolume is provided and exists in volumes, use it
+      if (initialVolume) {
+        const volumeExists = mangaData.volumes.some(v => v.volumeNumber === initialVolume);
+        if (volumeExists) {
+          setSelectedVolume(initialVolume);
+          return;
+        }
+      }
+      // Otherwise default to first volume
       setSelectedVolume(mangaData.volumes[0]!.volumeNumber);
     }
-  }, [mangaData]);
+  }, [mangaData, initialVolume]);
 
   if (mangaData === undefined) {
     return <div>Loading...</div>;
@@ -61,7 +72,7 @@ export function MangaDetail({ slug, onBack }: MangaDetailProps) {
         </select>
       </div>
 
-      <MangaReader slug={slug} volumeNumber={selectedVolume} mangaId={manga._id} />
+      <MangaReader slug={slug} volumeNumber={selectedVolume} mangaId={manga._id} initialPage={initialPage} />
     </div>
   );
 }
@@ -70,11 +81,12 @@ interface MangaReaderProps {
   slug: string;
   volumeNumber: number;
   mangaId: string;
+  initialPage?: number;
 }
 
-function MangaReader({ slug, volumeNumber, mangaId }: MangaReaderProps) {
+function MangaReader({ slug, volumeNumber, mangaId, initialPage }: MangaReaderProps) {
   const volumeData = useQuery(api.manga.getVolume, { mangaSlug: slug, volumeNumber });
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(initialPage ? initialPage - 1 : 0);
   const preloadedRef = useRef<Set<number>>(new Set());
   const saveProgress = useMutation(api.readingProgress.saveProgress);
 

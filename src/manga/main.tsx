@@ -53,7 +53,7 @@ async function signalBackend(): Promise<void> {
 }
 
 function App() {
-  const [selectedManga, setSelectedManga] = useState<string | null>(null);
+  const [selectedManga, setSelectedManga] = useState<{ slug: string; volume?: number; page?: number } | null>(null);
   const [backendAvailable, setBackendAvailable] = useState<boolean>(false);
   const [checkingBackend, setCheckingBackend] = useState<boolean>(true);
 
@@ -90,7 +90,7 @@ function App() {
         {!checkingBackend && backendAvailable && (
           <div style={{
             position: 'fixed',
-            top: '20px',
+            top: '80px',
             right: '20px',
             zIndex: 1000,
           }}>
@@ -103,11 +103,13 @@ function App() {
         {/* Main Content */}
         {selectedManga ? (
           <MangaDetail 
-            slug={selectedManga} 
+            slug={selectedManga.slug} 
+            initialVolume={selectedManga.volume}
+            initialPage={selectedManga.page}
             onBack={() => setSelectedManga(null)} 
           />
         ) : (
-          <MangaList onSelectManga={setSelectedManga} />
+          <MangaList onSelectManga={(slug, volume, page) => setSelectedManga({ slug, volume, page })} />
         )}
       </div>
     </ConvexAuthProvider>
