@@ -1,5 +1,7 @@
 import { ConvexAuthProvider, useAuthActions } from "@convex-dev/auth/react";
 import { Authenticated, Unauthenticated, AuthLoading } from "convex/react";
+import { useQuery } from "convex/react";
+import { api } from "../../convex/_generated/api";
 import { ConvexReactClient } from "convex/react";
 import { createRoot } from "react-dom/client";
 import { useState, useEffect } from "react";
@@ -134,12 +136,13 @@ function App() {
 // Authentication Components
 function AuthButtons() {
   const { signIn, signOut } = useAuthActions();
+  const user = useQuery(api.users.getCurrentUser);
   
   return (
     <div style={{
       position: 'fixed',
       top: '20px',
-      left: '20px',
+      right: '120px',
       zIndex: 1001,
       display: 'flex',
       gap: '10px',
@@ -174,21 +177,38 @@ function AuthButtons() {
       </Unauthenticated>
       
       <Authenticated>
-        <button
-          onClick={() => void signOut()}
-          style={{
-            padding: '10px 20px',
-            backgroundColor: '#dc3545',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            fontSize: '14px',
-            fontWeight: 'bold',
-          }}
-        >
-          Sign out
-        </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <button
+            onClick={() => void signOut()}
+            style={{
+              padding: '10px 20px',
+              backgroundColor: '#dc3545',
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer',
+              fontSize: '14px',
+              fontWeight: 'bold',
+            }}
+          >
+            Sign out
+          </button>
+          {user?.image && (
+            <img
+              src={user.image}
+              alt={user.name || 'User'}
+              title={user.name || 'User'}
+              style={{
+                width: '40px',
+                height: '40px',
+                borderRadius: '50%',
+                border: '2px solid #fff',
+                boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
+                objectFit: 'cover',
+              }}
+            />
+          )}
+        </div>
       </Authenticated>
     </div>
   );
