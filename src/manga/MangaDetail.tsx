@@ -29,9 +29,9 @@ export function MangaDetail({ slug, onBack }: MangaDetailProps) {
 
   return (
     <div>
-      <button onClick={onBack} style={{ marginBottom: "20px" }}>
+      <a href="#" onClick={(e) => { e.preventDefault(); onBack(); }}>
         ← Back to Library
-      </button>
+      </a>
 
       <div style={{ marginBottom: "20px", border: "1px solid #ccc", padding: "10px" }}>
         <img
@@ -143,23 +143,19 @@ function MangaReader({ slug, volumeNumber, mangaId }: MangaReaderProps) {
 
       {/* Navigation */}
       <div style={{ marginBottom: "20px" }}>
-        <button
-          onClick={() => goToPage(currentPage - 1)}
-          disabled={currentPage === 0}
-          style={{ marginRight: "10px" }}
-        >
-          ← Previous
-        </button>
+        {currentPage > 0 && (
+          <a href="#" onClick={(e) => { e.preventDefault(); goToPage(currentPage - 1); }} style={{ marginRight: "10px" }}>
+            ← Previous
+          </a>
+        )}
         <span>
           Page {currentPage + 1} of {volume.pageCount}
         </span>
-        <button
-          onClick={() => goToPage(currentPage + 1)}
-          disabled={currentPage === pages.length - 1}
-          style={{ marginLeft: "10px" }}
-        >
-          Next →
-        </button>
+        {currentPage < pages.length - 1 && (
+          <a href="#" onClick={(e) => { e.preventDefault(); goToPage(currentPage + 1); }} style={{ marginLeft: "10px" }}>
+            Next →
+          </a>
+        )}
       </div>
 
       {/* Image */}
@@ -186,8 +182,10 @@ function MangaReader({ slug, volumeNumber, mangaId }: MangaReaderProps) {
 
       {/* Bookmark Button */}
       <div style={{ marginTop: "30px", textAlign: "center" }}>
-        <button
-          onClick={async () => {
+        <a 
+          href="#" 
+          onClick={async (e) => {
+            e.preventDefault();
             try {
               await saveProgress({
                 mangaId: mangaId as any,
@@ -196,27 +194,13 @@ function MangaReader({ slug, volumeNumber, mangaId }: MangaReaderProps) {
                 pageUrl: pages[currentPage]!,
               });
               alert("✅ Bookmark saved!");
-            } catch (e) {
+            } catch (err) {
               alert("❌ Please sign in to save bookmarks");
             }
           }}
-          style={{
-            padding: "12px 24px",
-            backgroundColor: "#4CAF50",
-            color: "white",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-            fontSize: "16px",
-            fontWeight: "bold",
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-            margin: "0 auto",
-          }}
         >
           🔖 Bookmark
-        </button>
+        </a>
       </div>
     </div>
   );

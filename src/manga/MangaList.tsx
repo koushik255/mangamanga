@@ -19,21 +19,9 @@ export function MangaList({ onSelectManga }: MangaListProps) {
         <h1 style={{ margin: 0 }}>Manga Library</h1>
         
         {lastRead && (
-          <button
-            onClick={() => onSelectManga(lastRead.mangaSlug)}
-            style={{
-              padding: "10px 20px",
-              backgroundColor: "#28a745",
-              color: "white",
-              border: "none",
-              borderRadius: "5px",
-              cursor: "pointer",
-              fontSize: "14px",
-              fontWeight: "bold",
-            }}
-          >
+          <a href="#" onClick={(e) => { e.preventDefault(); onSelectManga(lastRead.mangaSlug); }}>
             Continue: {lastRead.mangaTitle} - Vol {lastRead.volumeNumber} Page {lastRead.pageNumber}
-          </button>
+          </a>
         )}
       </div>
       <ul style={{ listStyle: "none", padding: 0 }}>
@@ -48,21 +36,9 @@ export function MangaList({ onSelectManga }: MangaListProps) {
             <p>Status: {manga.status}</p>
             <p>Total Volumes: {manga.totalVolumes}</p>
             {manga.description && <p>{manga.description}</p>}
-            <button 
-              onClick={() => onSelectManga(manga.slug)}
-              style={{ 
-                marginTop: "10px",
-                padding: "10px 20px",
-                fontSize: "16px",
-                cursor: "pointer",
-                backgroundColor: "#007bff",
-                color: "white",
-                border: "none",
-                borderRadius: "4px"
-              }}
-            >
+            <a href="#" onClick={(e) => { e.preventDefault(); onSelectManga(manga.slug); }}>
               Read Manga →
-            </button>
+            </a>
           </li>
         ))}
       </ul>
