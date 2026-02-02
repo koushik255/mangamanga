@@ -151,7 +151,7 @@ function AuthButtons() {
       
       <Unauthenticated>
         <button
-          onClick={() => void signIn("github")}
+          onClick={() => void signIn("github", { redirectTo: "/manga" })}
           style={{
             padding: '10px 20px',
             backgroundColor: '#24292e',
