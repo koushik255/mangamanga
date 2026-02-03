@@ -87,14 +87,29 @@ interface MangaReaderProps {
 function MangaReader({ slug, volumeNumber, mangaId, initialPage }: MangaReaderProps) {
   const volumeData = useQuery(api.manga.getVolume, { mangaSlug: slug, volumeNumber });
   const [currentPage, setCurrentPage] = useState(initialPage ? initialPage - 1 : 0);
+  const [inputPage, setInputPage] = useState<string>(initialPage ? String(initialPage) : "1");
   const preloadedRef = useRef<Set<number>>(new Set());
   const saveProgress = useMutation(api.readingProgress.saveProgress);
+
+  // Update page when initialPage changes (for bookmarks)
+  useEffect(() => {
+    if (initialPage) {
+      setCurrentPage(initialPage - 1);
+      setInputPage(String(initialPage));
+    }
+  }, [initialPage]);
 
   // Reset page when volume changes
   useEffect(() => {
     setCurrentPage(0);
+    setInputPage("1");
     preloadedRef.current.clear();
   }, [volumeNumber]);
+
+  // Update input when navigating pages
+  useEffect(() => {
+    setInputPage(String(currentPage + 1));
+  }, [currentPage]);
 
   // Preload next page only
   useEffect(() => {
@@ -174,10 +189,11 @@ function MangaReader({ slug, volumeNumber, mangaId, initialPage }: MangaReaderPr
             type="number"
             min={1}
             max={volume.pageCount}
-            defaultValue={currentPage + 1}
+            value={inputPage}
+            onChange={(e) => setInputPage(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                const targetPage = parseInt(e.currentTarget.value, 10);
+                const targetPage = parseInt(inputPage, 10);
                 if (targetPage >= 1 && targetPage <= volume.pageCount) {
                   goToPage(targetPage - 1);
                 }
