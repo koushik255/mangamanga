@@ -168,6 +168,24 @@ function MangaReader({ slug, volumeNumber, mangaId, initialPage }: MangaReaderPr
             Next →
           </a>
         )}
+        <span style={{ marginLeft: "20px" }}>
+          Go to page: 
+          <input
+            type="number"
+            min={1}
+            max={volume.pageCount}
+            defaultValue={currentPage + 1}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                const targetPage = parseInt(e.currentTarget.value, 10);
+                if (targetPage >= 1 && targetPage <= volume.pageCount) {
+                  goToPage(targetPage - 1);
+                }
+              }
+            }}
+            style={{ width: "60px", marginLeft: "5px" }}
+          />
+        </span>
       </div>
 
       {/* Image */}
