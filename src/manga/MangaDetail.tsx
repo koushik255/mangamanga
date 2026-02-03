@@ -99,8 +99,15 @@ function MangaReader({ slug, volumeNumber, mangaId, initialPage }: MangaReaderPr
     }
   }, [initialPage]);
 
-  // Reset page when volume changes
+  // Track if this is the initial mount to avoid resetting bookmarked page
+  const isInitialMount = useRef(true);
+  
+  // Reset page when volume changes (but not on initial mount)
   useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
     setCurrentPage(0);
     setInputPage("1");
     preloadedRef.current.clear();
