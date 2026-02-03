@@ -8,7 +8,7 @@ Part 7 Jojo yeah that good reads tbh
 
 Ok so now i should make it so that
 Python script to automate the pushing to the bucket and convex 
-
+but 
 I should also create a "dev envirorment" so that i dont have to have multipe terminal windows open just to run the app/db
 
 the script still sucks i probably need to do it myself breh
@@ -21,3 +21,9 @@ but o
 ok its kinda working now but i should first make it so it can upload complete mangas first
 then make it so i can automaticlaly update the bucket from the backend with digital ocean functions
 :
+
+
+** if you skip to lets say page 50 it loads everything up to that point your skipping so theirs no point dude
+**i should upload a full manga "which one"
+what if site to keep track of stuff?
+HOW TF TO HANDLE DOUBLE IMAGES???

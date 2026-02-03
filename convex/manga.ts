@@ -109,6 +109,38 @@ export const addVolume = mutation({
 });
 
 /**
+ * Update a volume's page count
+ */
+export const updateVolume = mutation({
+  args: {
+    mangaId: v.id("manga"),
+    volumeNumber: v.number(),
+    pageCount: v.number(),
+  },
+  returns: v.id("volumes"),
+  handler: async (ctx, args) => {
+    // Find the volume
+    const volume = await ctx.db
+      .query("volumes")
+      .withIndex("by_manga_and_number", (q) =>
+        q.eq("mangaId", args.mangaId).eq("volumeNumber", args.volumeNumber)
+      )
+      .unique();
+
+    if (!volume) {
+      throw new Error(`Volume ${args.volumeNumber} not found for this manga`);
+    }
+
+    // Update the page count
+    await ctx.db.patch(volume._id, {
+      pageCount: args.pageCount,
+    });
+
+    return volume._id;
+  },
+});
+
+/**
  * Get all manga (list view)
  */
 export const listManga = query({

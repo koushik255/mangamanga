@@ -14,6 +14,9 @@ dependencies = [
 
 [project.scripts]
 upload-volume = "upload_volume:main"
+upload-full-manga = "upload_full_manga:main"
+upload-manga-to-db = "upload_manga_to_db:main"
+update-volume-pages = "update_volume_pages:main"
 
 [tool.uv]
 dev-dependencies = []
